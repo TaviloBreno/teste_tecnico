@@ -57,7 +57,15 @@ const login = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Credenciais inválidas. Tente novamente.");
+      // Exibe uma mensagem de erro específica se as credenciais forem inválidas
+      if (response.status === 401) {
+        errorMessage.value =
+          "Credenciais inválidas. Por favor, tente novamente.";
+      } else {
+        errorMessage.value = "Erro ao fazer login. Tente novamente mais tarde.";
+      }
+      successMessage.value = "";
+      return;
     }
 
     const result = await response.json();
@@ -80,14 +88,10 @@ const login = async () => {
 .login-container {
   max-width: 400px;
   margin: 0 auto;
-  padding: 40px 40px;
+  padding: 20px 40px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .form-group {
@@ -95,7 +99,7 @@ const login = async () => {
 }
 
 .input-field {
-  width: 93%;
+  width: 100%;
   padding: 0.5em;
   border: 1px solid #ccc;
   border-radius: 4px;

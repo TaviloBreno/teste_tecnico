@@ -85,7 +85,17 @@ const register = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Falha no registro. Tente novamente.");
+      // Verifica o status da resposta e exibe mensagens de erro específicas
+      if (response.status === 400) {
+        errorMessage.value =
+          "Dados inválidos. Verifique as informações e tente novamente.";
+      } else if (response.status === 409) {
+        errorMessage.value = "O e-mail ou nome de usuário já estão em uso.";
+      } else {
+        errorMessage.value = "Erro ao registrar. Tente novamente mais tarde.";
+      }
+      successMessage.value = "";
+      return;
     }
 
     const result = await response.json();
