@@ -108,3 +108,92 @@ O seeder criará um usuário admin com as seguintes credenciais:
 - **Senha**: password123
 
 Use essas credenciais para fazer login e testar a API.
+
+# Projeto Front-end: Sistema de Autenticação e CRUD de Tarefas
+
+Este projeto é uma aplicação front-end desenvolvida em Vue.js que implementa um sistema de autenticação de usuários e operações CRUD (Criar, Ler, Atualizar e Deletar) para gerenciamento de tarefas.
+
+## Requisitos
+
+Antes de iniciar, certifique-se de ter instalado em seu ambiente de desenvolvimento:
+
+- [Node.js](https://nodejs.org/) (versão 14 ou superior)
+- [npm](https://www.npmjs.com/) (geralmente instalado junto com o Node.js)
+
+## Instalação
+
+Siga os passos abaixo para clonar o repositório e instalar as dependências necessárias:
+
+## Executando o Projeto
+
+Para iniciar o servidor de desenvolvimento e visualizar o projeto em seu navegador:
+
+```bash
+npm run serve
+```
+
+O projeto estará disponível em [http://localhost:8080](http://localhost:8080).
+
+## Executando os Testes
+
+Para rodar os testes unitários utilizando o Jest:
+
+```bash
+npm run test:unit
+```
+
+Certifique-se de que os testes estejam configurados corretamente no arquivo `jest.config.js`.
+
+## Estrutura do Projeto
+
+A estrutura de diretórios e arquivos principais do projeto é a seguinte:
+
+```plaintext
+teste_tecnico/
+├── src/
+│   ├── components/
+│   ├── views/
+│   ├── App.vue
+│   └── main.js
+├── tests/
+│   └── unit/
+│       └── exemplo.spec.js
+├── package.json
+├── jest.config.js
+└── README.md
+```
+
+## API Endpoints
+
+### Autenticação
+
+- **Login**: `POST /api/login`
+  - Campos: `email`, `password`
+
+- **Registro**: `POST /api/register`
+  - Campos: `username`, `email`, `password`, `confirmPassword`
+
+- **Logout**: `POST /api/logout`
+  - Requer Token JWT no cabeçalho `Authorization: Bearer <token>`
+
+### CRUD de Tarefas
+
+- **Criar Tarefa**: `POST /api/tasks`
+  - Requer Token JWT no cabeçalho `Authorization: Bearer <token>`
+  - Campos: `title`, `description` (opcional)
+
+- **Listar Tarefas do Usuário Autenticado**: `GET /api/tasks`
+  - Requer Token JWT no cabeçalho `Authorization: Bearer <token>`
+
+- **Editar Tarefa**: `PUT /api/tasks/{id}`
+  - Requer Token JWT no cabeçalho `Authorization: Bearer <token>`
+  - Campos: `title`, `description` (opcional)
+
+- **Excluir Tarefa**: `DELETE /api/tasks/{id}`
+  - Requer Token JWT no cabeçalho `Authorization: Bearer <token>`
+
+## Tecnologias Utilizadas
+
+- Vue.js 3
+- Jest
+- Vue Test Utils
