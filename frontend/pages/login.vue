@@ -69,14 +69,20 @@ const login = async () => {
     }
 
     const result = await response.json();
-    successMessage.value = "Login realizado com sucesso!";
-    errorMessage.value = "";
 
-    // Exemplo: salvar token de autenticação (se a API retornar um token)
-    localStorage.setItem("authToken", result.token);
+    // Verifica se o token JWT foi retornado
+    if (result.token) {
+      // Armazena o token JWT no localStorage
+      localStorage.setItem("authToken", result.token);
+      successMessage.value = "Login realizado com sucesso!";
+      errorMessage.value = "";
 
-    // Redireciona para a rota inicial
-    router.push("/");
+      // Redireciona para a rota inicial
+      router.push("/");
+    } else {
+      errorMessage.value = "Erro ao receber o token de autenticação.";
+      successMessage.value = "";
+    }
   } catch (error) {
     errorMessage.value = error.message || "Erro ao fazer login.";
     successMessage.value = "";
