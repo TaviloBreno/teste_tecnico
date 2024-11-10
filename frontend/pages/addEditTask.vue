@@ -1,13 +1,13 @@
 <template>
   <div class="task-form-container">
     <h1>{{ isEditing ? "Editar Tarefa" : "Adicionar Nova Tarefa" }}</h1>
-    <form @submit.prevent="saveTask" class="task-form">
+    <form @submit.prevent="handleSubmit" class="task-form">
       <div class="form-group">
         <label for="title">Título</label>
         <input
           type="text"
           id="title"
-          v-model="task.title"
+          v-model="taskData.title"
           required
           class="input-field"
         />
@@ -16,7 +16,7 @@
         <label for="description">Descrição</label>
         <textarea
           id="description"
-          v-model="task.description"
+          v-model="taskData.description"
           class="textarea-field"
         ></textarea>
       </div>
@@ -29,44 +29,50 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+// Configuração da rota e roteador
 const route = useRoute();
 const router = useRouter();
-const task = ref({
+
+// Estado para dados da tarefa e verificação de edição
+const taskData = ref({
   title: "",
   description: "",
 });
 const isEditing = ref(false);
 
-const fetchTask = async (id) => {
+// Função para buscar dados da tarefa para edição
+const fetchTaskData = async (taskId) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/tasks/${id}`, {
+    const response = await fetch(`http://localhost:8000/api/tasks/${taskId}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
     });
     if (response.ok) {
-      task.value = await response.json();
+      taskData.value = await response.json();
     } else {
-      console.error("Erro ao carregar tarefa.");
+      console.error("Erro ao carregar a tarefa.");
     }
   } catch (error) {
-    console.error("Erro ao carregar tarefa:", error);
+    console.error("Erro ao carregar a tarefa:", error);
   }
 };
 
-const saveTask = async () => {
+// Função para criar ou atualizar a tarefa
+const handleSubmit = async () => {
+  const url = isEditing.value
+    ? `http://localhost:8000/api/tasks/${route.query.id}`
+    : "http://localhost:8000/api/tasks";
+  const method = isEditing.value ? "PUT" : "POST";
+
   try {
-    const url = isEditing.value
-      ? `http://localhost:8000/api/tasks/${route.query.id}`
-      : "http://localhost:8000/api/tasks";
-    const method = isEditing.value ? "PUT" : "POST";
     const response = await fetch(url, {
       method,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
-      body: JSON.stringify(task.value),
+      body: JSON.stringify(taskData.value),
     });
 
     if (response.ok) {
@@ -79,11 +85,11 @@ const saveTask = async () => {
   }
 };
 
-// Verifica se estamos editando uma tarefa existente
+// Detecta se é uma edição e carrega dados da tarefa
 onMounted(() => {
   if (route.query.id) {
     isEditing.value = true;
-    fetchTask(route.query.id);
+    fetchTaskData(route.query.id);
   }
 });
 </script>

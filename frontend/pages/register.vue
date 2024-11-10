@@ -1,13 +1,13 @@
 <template>
   <div class="register-container">
     <h1>Registro</h1>
-    <form @submit.prevent="register">
+    <form @submit.prevent="handleRegister" class="register-form">
       <div class="form-group">
         <label for="username">Nome de Usuário</label>
         <input
           type="text"
           id="username"
-          v-model="form.username"
+          v-model="registrationData.username"
           class="input-field"
           required
         />
@@ -17,7 +17,7 @@
         <input
           type="email"
           id="email"
-          v-model="form.email"
+          v-model="registrationData.email"
           class="input-field"
           required
         />
@@ -27,7 +27,7 @@
         <input
           type="password"
           id="password"
-          v-model="form.password"
+          v-model="registrationData.password"
           class="input-field"
           required
         />
@@ -37,7 +37,7 @@
         <input
           type="password"
           id="confirmPassword"
-          v-model="form.confirmPassword"
+          v-model="registrationData.confirmPassword"
           class="input-field"
           required
         />
@@ -52,7 +52,8 @@
 <script setup>
 import { ref } from "vue";
 
-const form = ref({
+// Dados do formulário e mensagens de feedback
+const registrationData = ref({
   username: "",
   email: "",
   password: "",
@@ -62,25 +63,26 @@ const form = ref({
 const errorMessage = ref("");
 const successMessage = ref("");
 
-const register = async () => {
-  // Validação de senha
-  if (form.value.password !== form.value.confirmPassword) {
+// Função de registro
+const handleRegister = async () => {
+  if (
+    registrationData.value.password !== registrationData.value.confirmPassword
+  ) {
     errorMessage.value = "As senhas não coincidem.";
     successMessage.value = "";
     return;
   }
 
   try {
-    // Requisição para a API de registro
     const response = await fetch("http://localhost:8000/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: form.value.username,
-        email: form.value.email,
-        password: form.value.password,
+        username: registrationData.value.username,
+        email: registrationData.value.email,
+        password: registrationData.value.password,
       }),
     });
 
@@ -109,26 +111,43 @@ const register = async () => {
 </script>
 
 <style scoped>
+/* Container principal do formulário de registro */
 .register-container {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px 40px;
   background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.form-group {
+/* Título */
+.register-container h1 {
+  font-size: 1.8em;
+  color: #333;
   margin-bottom: 1em;
 }
 
+/* Grupo de formulário */
+.form-group label {
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 0.5em;
+  display: inline-block;
+  font-weight: 600;
+}
+
+/* Campos de entrada */
 .input-field {
   width: 100%;
-  padding: 0.5em;
+  padding: 0.75em;
+  font-size: 1em;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
+/* Botão de cadastro */
 .submit-button {
   width: 100%;
   padding: 0.75em;
@@ -137,12 +156,15 @@ const register = async () => {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
   background-color: #0056b3;
 }
 
+/* Mensagens de feedback */
 .message {
   margin-top: 1em;
   text-align: center;

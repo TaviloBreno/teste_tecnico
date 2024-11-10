@@ -67,7 +67,6 @@ Este projeto foi desenvolvido para fins educacionais, mas contribuições são b
 
 Este projeto está sob a licença MIT.
 
-
 ## Instalação e Configuração
 
 ### 1. Clone o Repositório
@@ -75,21 +74,37 @@ Este projeto está sob a licença MIT.
 Primeiro, clone o repositório para o seu computador:
 
 ```bash
-1. Clone o repositório para o seu computador:
-    ```bash
-    git clone https://github.com/TaviloBreno/teste_tecnico.git
-    ```
+git clone https://github.com/TaviloBreno/teste_tecnico.git
+```
 
-2. Navegue até o diretório do backend:
-    ```bash
-    cd teste_tecnico/backend
-    ```
+### 2. Navegue até o diretório do backend:
 
-3. Execute o container do MySQL:
-    ```bash
-    docker exec -it mysql_db bash
-    ```
-4. Execute as migrações
-    ```bash
-    php artisan migrate
-    ```
+```bash
+cd teste_tecnico/backend
+```
+
+### 3. Execute o container do MySQL:
+
+```bash
+docker exec -it mysql_db bash
+```
+
+### 4. Execute as migrações:
+
+```bash
+php artisan migrate
+```
+
+### 5. Execute o seeder para criar o usuário admin:
+
+```bash
+php artisan db:seed --class=AdminUserSeeder
+```
+### 6. Usuário Admin
+
+O seeder criará um usuário admin com as seguintes credenciais:
+
+- **Email**: admin@example.com
+- **Senha**: password123
+
+Use essas credenciais para fazer login e testar a API.
