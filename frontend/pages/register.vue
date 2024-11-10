@@ -72,17 +72,16 @@ const successMessage = ref(""); // Armazena a mensagem de sucesso
 
 // Função para manipular o registro
 const handleRegister = async () => {
-  // Valida se a senha e a confirmação de senha são iguais
+  // Verifica se as senhas coincidem antes de enviar a requisição
   if (
     registrationData.value.password !== registrationData.value.confirmPassword
   ) {
-    errorMessage.value = "As senhas não coincidem."; // Exibe mensagem de erro
-    successMessage.value = ""; // Limpa a mensagem de sucesso, se houver
-    return; // Interrompe o processo de registro
+    errorMessage.value = "As senhas não coincidem.";
+    successMessage.value = "";
+    return;
   }
 
   try {
-    // Envia uma requisição POST para a API de registro com os dados do formulário
     const response = await fetch("http://localhost:8000/api/register", {
       method: "POST",
       headers: {
@@ -95,16 +94,24 @@ const handleRegister = async () => {
       }),
     });
 
-    // Lógica de tratamento para resposta com erro
+    // Verifica se a resposta não foi bem-sucedida
     if (!response.ok) {
-      // Verifica o status da resposta e exibe uma mensagem apropriada
+      // Status 400 indica dados inválidos ou campo obrigatório ausente
       if (response.status === 400) {
         errorMessage.value =
           "Dados inválidos. Verifique as informações e tente novamente.";
-      } else if (response.status === 409) {
+      }
+      // Status 409 indica conflito (por exemplo, email ou nome de usuário já em uso)
+      else if (response.status === 409) {
         errorMessage.value = "O e-mail ou nome de usuário já estão em uso.";
-      } else {
-        errorMessage.value = "Erro ao registrar. Tente novamente mais tarde.";
+      }
+      // Outros erros de servidor
+      else if (response.status >= 500) {
+        errorMessage.value = "Erro no servidor. Tente novamente mais tarde.";
+      }
+      // Outros erros
+      else {
+        errorMessage.value = "Erro ao registrar. Tente novamente.";
       }
       successMessage.value = ""; // Limpa a mensagem de sucesso, se houver
       return;
@@ -114,10 +121,20 @@ const handleRegister = async () => {
     const result = await response.json();
     successMessage.value = "Usuário registrado com sucesso!";
     errorMessage.value = ""; // Limpa qualquer mensagem de erro
+
+    // Redirecionamento ou outra ação pode ser feita aqui
+    // Exemplo: router.push("/login");
   } catch (error) {
-    // Captura e exibe erros ao tentar registrar
-    errorMessage.value = error.message || "Erro ao registrar o usuário.";
-    successMessage.value = ""; // Limpa a mensagem de sucesso
+    // Trata erros de rede ou conexão
+    errorMessage.value =
+      "Erro de conexão com o servidor. Verifique sua internet.";
+    successMessage.value = "";
+  } finally {
+    // Limpa mensagens após 5 segundos, se necessário
+    setTimeout(() => {
+      errorMessage.value = "";
+      successMessage.value = "";
+    }, 5000);
   }
 };
 </script>

@@ -51,7 +51,6 @@ const router = useRouter(); // Instância do router para redirecionamento
 // Função para realizar o login e manipular a resposta da API
 const handleLogin = async () => {
   try {
-    // Envia uma requisição POST para a API de login com o e-mail e senha fornecidos
     const response = await fetch("http://localhost:8000/api/login", {
       method: "POST",
       headers: {
@@ -63,34 +62,35 @@ const handleLogin = async () => {
       }),
     });
 
-    // Lógica de tratamento para resposta com erro
+    // Verifica se a resposta não foi bem-sucedida
     if (!response.ok) {
-      // Verifica o status de erro; 401 indica credenciais inválidas
       errorMessage.value =
         response.status === 401
           ? "Credenciais inválidas. Por favor, tente novamente."
-          : "Erro ao fazer login. Tente novamente mais tarde.";
-      successMessage.value = ""; // Limpa qualquer mensagem de sucesso anterior
+          : response.status === 403
+          ? "Acesso negado. Verifique suas permissões."
+          : response.status >= 500
+          ? "Erro no servidor. Tente novamente mais tarde."
+          : "Erro ao fazer login. Tente novamente.";
+      successMessage.value = ""; // Limpa mensagem de sucesso
       return;
     }
 
-    // Converte a resposta da API para JSON
+    // Se o login for bem-sucedido e a resposta contiver um token
     const result = await response.json();
-
-    // Se a resposta inclui um token JWT, armazena-o no localStorage
     if (result.token) {
-      localStorage.setItem("authToken", result.token); // Salva o token de autenticação
+      localStorage.setItem("authToken", result.token);
       successMessage.value = "Login realizado com sucesso!";
-      errorMessage.value = ""; // Limpa qualquer mensagem de erro anterior
-      router.push("/tasks"); // Redireciona o usuário para a página de tarefas após o login bem-sucedido
+      errorMessage.value = ""; // Limpa a mensagem de erro
+      router.push("/tasks"); // Redireciona para a página de tarefas
     } else {
-      // Caso o token não seja recebido, exibe um erro de autenticação
       errorMessage.value = "Erro ao receber o token de autenticação.";
       successMessage.value = "";
     }
   } catch (error) {
-    // Captura e exibe qualquer erro na tentativa de login
-    errorMessage.value = error.message || "Erro ao fazer login.";
+    // Trata erros de rede ou conexão
+    errorMessage.value =
+      "Erro de conexão com o servidor. Verifique sua internet.";
     successMessage.value = "";
   }
 };
@@ -126,7 +126,7 @@ const handleLogin = async () => {
 
 /* Estilo para campos de entrada */
 .input-field {
-  width: 91%;
+  width: 100%;
   padding: 0.75em;
   border: 1px solid #ddd;
   border-radius: 4px;
