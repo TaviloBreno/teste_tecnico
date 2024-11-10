@@ -29,8 +29,8 @@ services:
     ports:
       - "3000:3000"  # Porta externa 3000 para o frontend Nuxt.js
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend:/app  # Monta o volume do código fonte do frontend
+      - /app/node_modules  # Evita sincronizar node_modules entre host e container
     command: npm run dev
     environment:
       - HOST=0.0.0.0
