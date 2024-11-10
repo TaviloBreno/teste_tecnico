@@ -92,12 +92,16 @@ const login = async () => {
 
 <style scoped>
 .login-container {
-  max-width: 400px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 20px 40px;
+  padding: 40px 40px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .form-group {
@@ -105,7 +109,7 @@ const login = async () => {
 }
 
 .input-field {
-  width: 100%;
+  width: 93%;
   padding: 0.5em;
   border: 1px solid #ccc;
   border-radius: 4px;
