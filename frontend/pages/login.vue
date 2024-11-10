@@ -1,17 +1,7 @@
 <template>
-  <div class="register-container">
-    <h1>Registro</h1>
-    <form @submit.prevent="register">
-      <div class="form-group">
-        <label for="username">Nome de Usuário</label>
-        <input
-          type="text"
-          id="username"
-          v-model="form.username"
-          class="input-field"
-          required
-        />
-      </div>
+  <div class="login-container">
+    <h1>Login</h1>
+    <form @submit.prevent="login">
       <div class="form-group">
         <label for="email">E-mail</label>
         <input
@@ -32,17 +22,7 @@
           required
         />
       </div>
-      <div class="form-group">
-        <label for="confirmPassword">Confirme a Senha</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          v-model="form.confirmPassword"
-          class="input-field"
-          required
-        />
-      </div>
-      <button type="submit" class="submit-button">Cadastrar</button>
+      <button type="submit" class="submit-button">Entrar</button>
     </form>
     <p class="message error" v-if="errorMessage">{{ errorMessage }}</p>
     <p class="message success" v-if="successMessage">{{ successMessage }}</p>
@@ -51,61 +31,63 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router"; // Importa o router
 
 const form = ref({
-  username: "",
   email: "",
   password: "",
-  confirmPassword: "",
 });
 
 const errorMessage = ref("");
 const successMessage = ref("");
+const router = useRouter(); // Inicializa o router
 
-const register = async () => {
-  // Validação de senha
-  if (form.value.password !== form.value.confirmPassword) {
-    errorMessage.value = "As senhas não coincidem.";
-    successMessage.value = "";
-    return;
-  }
-
+const login = async () => {
   try {
-    // Requisição para a API de registro
-    const response = await fetch("http://localhost:8000/api/register", {
+    // Requisição para a API de login
+    const response = await fetch("http://localhost:8000/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: form.value.username,
         email: form.value.email,
         password: form.value.password,
       }),
     });
 
     if (!response.ok) {
-      throw new Error("Falha no registro. Tente novamente.");
+      throw new Error("Credenciais inválidas. Tente novamente.");
     }
 
     const result = await response.json();
-    successMessage.value = "Usuário registrado com sucesso!";
+    successMessage.value = "Login realizado com sucesso!";
     errorMessage.value = "";
+
+    // Exemplo: salvar token de autenticação (se a API retornar um token)
+    localStorage.setItem("authToken", result.token);
+
+    // Redireciona para a rota inicial
+    router.push("/");
   } catch (error) {
-    errorMessage.value = error.message || "Erro ao registrar o usuário.";
+    errorMessage.value = error.message || "Erro ao fazer login.";
     successMessage.value = "";
   }
 };
 </script>
 
 <style scoped>
-.register-container {
+.login-container {
   max-width: 400px;
   margin: 0 auto;
-  padding: 20px 40px;
+  padding: 40px 40px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .form-group {
@@ -113,7 +95,7 @@ const register = async () => {
 }
 
 .input-field {
-  width: 100%;
+  width: 93%;
   padding: 0.5em;
   border: 1px solid #ccc;
   border-radius: 4px;
