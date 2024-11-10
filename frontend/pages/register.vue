@@ -1,9 +1,11 @@
 <template>
   <div class="register-container">
     <h1>Registro</h1>
+    <!-- Formulário de registro com envio bloqueado por @submit.prevent para controle manual -->
     <form @submit.prevent="handleRegister" class="register-form">
       <div class="form-group">
         <label for="username">Nome de Usuário</label>
+        <!-- Campo de entrada para nome de usuário, ligado a registrationData.username -->
         <input
           type="text"
           id="username"
@@ -14,6 +16,7 @@
       </div>
       <div class="form-group">
         <label for="email">E-mail</label>
+        <!-- Campo de entrada para o e-mail, ligado a registrationData.email -->
         <input
           type="email"
           id="email"
@@ -24,6 +27,7 @@
       </div>
       <div class="form-group">
         <label for="password">Senha</label>
+        <!-- Campo de entrada para a senha, ligado a registrationData.password -->
         <input
           type="password"
           id="password"
@@ -34,6 +38,7 @@
       </div>
       <div class="form-group">
         <label for="confirmPassword">Confirme a Senha</label>
+        <!-- Campo de entrada para confirmação de senha, ligado a registrationData.confirmPassword -->
         <input
           type="password"
           id="confirmPassword"
@@ -42,8 +47,10 @@
           required
         />
       </div>
+      <!-- Botão de envio do formulário -->
       <button type="submit" class="submit-button">Cadastrar</button>
     </form>
+    <!-- Exibe mensagens de erro ou sucesso conforme o estado -->
     <p class="message error" v-if="errorMessage">{{ errorMessage }}</p>
     <p class="message success" v-if="successMessage">{{ successMessage }}</p>
   </div>
@@ -52,7 +59,7 @@
 <script setup>
 import { ref } from "vue";
 
-// Dados do formulário e mensagens de feedback
+// Estado dos dados do formulário e mensagens de feedback
 const registrationData = ref({
   username: "",
   email: "",
@@ -60,20 +67,22 @@ const registrationData = ref({
   confirmPassword: "",
 });
 
-const errorMessage = ref("");
-const successMessage = ref("");
+const errorMessage = ref(""); // Armazena a mensagem de erro
+const successMessage = ref(""); // Armazena a mensagem de sucesso
 
-// Função de registro
+// Função para manipular o registro
 const handleRegister = async () => {
+  // Valida se a senha e a confirmação de senha são iguais
   if (
     registrationData.value.password !== registrationData.value.confirmPassword
   ) {
-    errorMessage.value = "As senhas não coincidem.";
-    successMessage.value = "";
-    return;
+    errorMessage.value = "As senhas não coincidem."; // Exibe mensagem de erro
+    successMessage.value = ""; // Limpa a mensagem de sucesso, se houver
+    return; // Interrompe o processo de registro
   }
 
   try {
+    // Envia uma requisição POST para a API de registro com os dados do formulário
     const response = await fetch("http://localhost:8000/api/register", {
       method: "POST",
       headers: {
@@ -86,8 +95,9 @@ const handleRegister = async () => {
       }),
     });
 
+    // Lógica de tratamento para resposta com erro
     if (!response.ok) {
-      // Verifica o status da resposta e exibe mensagens de erro específicas
+      // Verifica o status da resposta e exibe uma mensagem apropriada
       if (response.status === 400) {
         errorMessage.value =
           "Dados inválidos. Verifique as informações e tente novamente.";
@@ -96,16 +106,18 @@ const handleRegister = async () => {
       } else {
         errorMessage.value = "Erro ao registrar. Tente novamente mais tarde.";
       }
-      successMessage.value = "";
+      successMessage.value = ""; // Limpa a mensagem de sucesso, se houver
       return;
     }
 
+    // Converte a resposta para JSON e exibe mensagem de sucesso
     const result = await response.json();
     successMessage.value = "Usuário registrado com sucesso!";
-    errorMessage.value = "";
+    errorMessage.value = ""; // Limpa qualquer mensagem de erro
   } catch (error) {
+    // Captura e exibe erros ao tentar registrar
     errorMessage.value = error.message || "Erro ao registrar o usuário.";
-    successMessage.value = "";
+    successMessage.value = ""; // Limpa a mensagem de sucesso
   }
 };
 </script>
@@ -122,14 +134,14 @@ const handleRegister = async () => {
   text-align: center;
 }
 
-/* Título */
+/* Título do formulário */
 .register-container h1 {
   font-size: 1.8em;
   color: #333;
   margin-bottom: 1em;
 }
 
-/* Grupo de formulário */
+/* Estilo dos grupos de formulário */
 .form-group label {
   font-size: 1em;
   color: #555;
@@ -147,7 +159,7 @@ const handleRegister = async () => {
   border-radius: 4px;
 }
 
-/* Botão de cadastro */
+/* Botão de envio */
 .submit-button {
   width: 100%;
   padding: 0.75em;
