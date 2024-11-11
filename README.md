@@ -100,7 +100,14 @@ php artisan migrate
 ```bash
 php artisan db:seed --class=AdminUserSeeder
 ```
-### 6. Usuário Admin
+
+### 6. Execute os testes:
+
+```bash
+./vendor/bin/pest
+```
+
+### 7. Usuário Admin
 
 O seeder criará um usuário admin com as seguintes credenciais:
 

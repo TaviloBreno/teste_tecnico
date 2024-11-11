@@ -126,7 +126,7 @@ const handleLogin = async () => {
 
 /* Estilo para campos de entrada */
 .input-field {
-  width: 100%;
+  width: 91%;
   padding: 0.75em;
   border: 1px solid #ddd;
   border-radius: 4px;
