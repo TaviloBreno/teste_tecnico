@@ -150,23 +150,13 @@ Antes de iniciar, certifique-se de ter instalado em seu ambiente de desenvolvime
 - [npm](https://www.npmjs.com/) (geralmente instalado junto com o Node.js)
 - [Git](https://git-scm.com/) para clonar o repositório
 
-## Passo a Passo para Instalação e Execução
-
-### 1. Clonar o Repositório
-
-Primeiro, clone o repositório do projeto em sua máquina local:
-
-```bash
-git clone https://github.com/TaviloBreno/teste_tecnico.git
-```
-
-### 2. Navegar até o Diretório do Projeto
+### 1. Navegar até o Diretório do Projeto
 Entre no diretório do projeto clonado:
 
 ```bash
 cd teste_tecnico/frontend
 ```
-### 2.1. Entrar no Container Docker
+### 2. Entrar no Container Docker
 
 Para executar comandos dentro do container do frontend, entre no container usando o seguinte comando:
 
