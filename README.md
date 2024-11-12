@@ -71,6 +71,19 @@ Ainda dentro do container, execute o seguinte comando para gerar a chave JWT:
 ```bash
 php artisan jwt:secret
 ```
+### 7.1. Criação do Banco de Dados
+
+Entre no container do MySQL para criar o banco de dados `todo_db`:
+
+```bash
+docker exec -it mysql_db mysql -u root -p
+```
+
+Digite a senha `root` quando solicitado e, em seguida, execute o comando SQL para criar o banco de dados:
+
+```sql
+CREATE DATABASE todo_db;
+```
 
 ### 8. Execute as Migrações e os Seeders
 Execute as migrações para criar as tabelas e o seeder para criar um usuário admin:
