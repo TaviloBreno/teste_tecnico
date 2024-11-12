@@ -33,7 +33,7 @@
 
 <script setup>
 import { useRoute, useRouter } from "vue-router";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 
 // Configuração das variáveis de rota e router para navegação e verificação de rota
 const route = useRoute();
@@ -50,6 +50,14 @@ const handleLogout = () => {
   // Redireciona o usuário para a página de login
   router.push("/login");
 };
+
+// Redireciona para /login se o usuário não estiver autenticado ao acessar /
+onMounted(() => {
+  const isAuthenticated = !!localStorage.getItem("authToken");
+  if (route.path === "/" && !isAuthenticated) {
+    router.push("/login");
+  }
+});
 </script>
 
 <style scoped>

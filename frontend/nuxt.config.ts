@@ -1,4 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+// frontend/nuxt.config.ts
 export default defineNuxtConfig({
   vite: {
     server: {
